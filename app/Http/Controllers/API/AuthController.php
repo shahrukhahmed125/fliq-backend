@@ -3,46 +3,28 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
+    public function register(RegisterRequest $request)
     {
         try{
-
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            $baseName = Str::slug($request->name);
-            $username = '@' . $baseName;
-            
-            while (User::query()->where('username', $username)->exists()) {
-
-                $username = '@' . $baseName . rand(10, 9999);
-
-            } 
-
-            $user = User::create([
-                'name' => $request->name,
-                'username' => $username,
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
+            $user = $this->authService->getRegister(
+                $request->validated()
+            );
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
