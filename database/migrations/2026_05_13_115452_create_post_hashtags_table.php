@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('post_hashtags', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name')->unique(); // e.g. "#fliq", "#fun", etc.
             $table->unsignedBigInteger('posts_count')->default(0);
             $table->unsignedBigInteger('views_count')->default(0);

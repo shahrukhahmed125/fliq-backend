@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('post_id')
                 ->constrained()
                 ->cascadeOnDelete();

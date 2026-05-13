@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('post_views', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('post_id')
                 ->constrained()
                 ->cascadeOnDelete();
