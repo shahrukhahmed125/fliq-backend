@@ -12,18 +12,35 @@ class AuthService
         $this->authRepository = $authRepository;
     }
 
-    public function getRegister(array $data)
+    public function register(array $data)
     {
-        return $this->authRepository->register($data);
+        $user = $this->authRepository->register($data);
+        return [
+            'status' => true,
+            'message' => 'Registered successful',
+            'token' => $user->createToken('auth_token')->plainTextToken,
+            'data' => $user
+        ];
     }
 
-    public function getLogin(array $credentials)
+    public function login(array $credentials)
     {
-        return $this->authRepository->login($credentials);
+        $user = $this->authRepository->login($credentials);
+        return [
+            'status' => true,
+            'message' => 'Login successful',
+            'token' => $user->createToken('auth_token')->plainTextToken,
+            'data' => $user
+        ];
     }
 
-    public function getLogout()
+    public function logout()
     {
-        return $this->authRepository->logout();
+        $this->authRepository->logout();
+
+        return [
+            'status' => true,
+            'message' => 'Logged out successfully',
+        ];
     }
 }

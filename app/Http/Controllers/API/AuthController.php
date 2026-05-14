@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\AuthService;
@@ -21,77 +22,29 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        try{
-            $user = $this->authService->getRegister(
+        return response()->json(
+            $this->authService->register(
                 $request->validated()
-            );
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Registration successful',
-                'token' => $token,
-                'data' => $user,
-            ], 201);
-            
-
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Registration failed',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+            ),
+            201
+        );
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        try{
-
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|string|email',
-                'password' => 'required|string',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            $user = User::query()->where('email', $request->email)->first();
-
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    'message' => 'Invalid email or password'
-                ], 401);
-            }
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Login successful',
-                'token' => $token,
-                'data' => $user,
-            ], 200);
-
-        }catch(\Exception $e){
-            return response()->json([
-                'message' => 'Login failed',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json(
+            $this->authService->login(
+                $request->validated()
+            ),
+            200
+        );
     }
 
     public function logout()
     {
-        auth()->user()->tokens()->delete();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Logged out successfully'
-        ], 200);
+        return response()->json(
+            $this->authService->logout(),
+            200
+        );
     }
 }

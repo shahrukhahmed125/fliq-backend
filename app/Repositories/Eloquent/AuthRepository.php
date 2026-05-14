@@ -34,11 +34,17 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function login(array $credentials)
     {
-        // Implement login logic here
+        $user = User::query()->where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw new \Exception('Invalid credentials');
+        }
+
+        return $user;
     }
 
-    public function logout()
+    public function logout(): void
     {
-        // Implement logout logic here
+        auth()->user()->tokens()->delete();
     }
 }
