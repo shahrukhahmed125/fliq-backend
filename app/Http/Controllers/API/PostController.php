@@ -45,13 +45,12 @@ class PostController extends Controller
 
     public function destroy(String $uuid)
     {
-        $result = $this->postService->delete($uuid);
+        $this->postService->delete($uuid);
 
-        if ($result['status']) {
-            return response()->json($result, 200);
-        } else {
-            return response()->json($result, 404);
-        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Post deleted successfully',
+        ]);
     }
 
 

@@ -57,14 +57,6 @@ class PostService
     {
         $post = $this->postRepository->update($uuid, $data);
 
-        if (!$post) {
-            return [
-                'status' => false,
-                'message' => 'Post not found or could not be updated',
-                'data' => null,
-            ];
-        }
-
         return [
             'status' => true,
             'message' => 'Post updated successfully',
@@ -72,20 +64,8 @@ class PostService
         ];
     }
 
-    public function delete(String $uuid): array
+    public function delete(String $uuid): void
     {
-        $deleted = $this->postRepository->delete($uuid);
-
-        if (!$deleted) {
-            return [
-                'status' => false,
-                'message' => 'Post not found or could not be deleted',
-            ];
-        }
-
-        return [
-            'status' => true,
-            'message' => 'Post deleted successfully',
-        ];
+        $this->postRepository->delete($uuid);
     }
 }

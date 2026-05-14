@@ -34,23 +34,21 @@ class PostRepository implements PostRepositoryInterface
 
     public function update(String $uuid, array $data)
     {
-        $post = Post::query()->where('uuid', $uuid)->first();
-        if ($post) {
-            $post->update([
-                'content' => $data['content'] ?? $post->content,
-            ]);
-            return $post;
-        }
-        return null;
+        $post = Post::query()->where('uuid', $uuid)->firstOrFail();
+        $post->update([
+            'user_id' => auth()->id(),
+            'content' => $data['content'] ?? $post->content,
+            'parent_id' => $data['parent_id'] ?? $post->parent_id,
+            'repost_of' => $data['repost_of'] ?? $post->repost_of,
+            'is_repost' => $data['is_repost'] ?? $post->is_repost,
+        ]);
+        return $post;
     }
 
     public function delete(String $uuid)
     {
-        $post = Post::query()->where('uuid', $uuid)->first();
-        if ($post) {
-            $post->delete();
-            return true;
-        }
-        return false;
+        $post = Post::query()->where('uuid', $uuid)->firstOrFail();
+        
+        $post->delete();
     }
 }
