@@ -34,7 +34,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function update(String $uuid, array $data)
     {
-        $post = Post::query()->where('uuid', $uuid)->firstOrFail();
+        $post = Post::query()->where('uuid', $uuid)->where('user_id', auth()->id())->firstOrFail();
         $post->update([
             'user_id' => auth()->id(),
             'content' => $data['content'] ?? $post->content,
@@ -47,7 +47,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function delete(String $uuid)
     {
-        $post = Post::query()->where('uuid', $uuid)->firstOrFail();
+        $post = Post::query()->where('uuid', $uuid)->where('user_id', auth()->id())->firstOrFail();
         
         $post->delete();
     }
