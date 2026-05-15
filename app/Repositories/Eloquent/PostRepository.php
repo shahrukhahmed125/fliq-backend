@@ -8,7 +8,9 @@ class PostRepository implements PostRepositoryInterface
 {
     public function all()
     {
-        $posts = Post::all();
+        $posts = Post::with(['user', 'media'])
+        ->latest()
+        ->get();
 
         return $posts;
     }
@@ -43,7 +45,7 @@ class PostRepository implements PostRepositoryInterface
                 : 'video';
 
             $post->media()->create([
-                'file_path' => $path,
+                'file_path' => asset('storage/' . $path),
                 'file_type' => $type,
                 'mime_type' => $file->getMimeType(),
                 'size' => $file->getSize(),
