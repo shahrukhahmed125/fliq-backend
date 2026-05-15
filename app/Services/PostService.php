@@ -42,14 +42,19 @@ class PostService
         ];
     }
 
-    public function store(array $data): array
+    public function store(array $data, $files = null): array
     {
         $post = $this->postRepository->store($data);
+        
+        // YOU MUST MANUALLY CALL THIS
+        if (!empty($files)) {
+            $this->postRepository->attachMedia($post, $files);
+        }
 
         return [
             'status' => true,
             'message' => 'Post created successfully',
-            'data' => $post,
+            'data' => $post->load('media'),
         ];
     }
 

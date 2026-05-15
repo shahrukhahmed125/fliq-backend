@@ -25,7 +25,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         return response()->json(
-            $this->postService->store($request->validated()), 
+            $this->postService->store($request->validated(), $request->file('media')), 
         201);
     }
 

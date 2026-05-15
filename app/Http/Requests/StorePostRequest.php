@@ -25,7 +25,7 @@ class StorePostRequest extends FormRequest
         return [
             'content' => 'required|string|max:280',
             'media' => 'nullable|array',
-            'media.*' => 'file|mimes:jpg,jpeg,png,gif,mp4,mov,avi|max:10240',
+            'media.*' => 'file|mimes:jpg,jpeg,png,mp4,mov,avi|max:51200',
             'parent_id' => 'nullable|exists:posts,id',
             'repost_of' => 'nullable|exists:posts,id',
             'is_repost' => 'boolean|nullable',

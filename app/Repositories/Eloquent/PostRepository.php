@@ -32,6 +32,25 @@ class PostRepository implements PostRepositoryInterface
         return $post;
     }
 
+    public function attachMedia(Post $post, $files)
+    {
+        foreach ((array) $files as $file) {
+
+            $path = $file->store('posts', 'public');
+
+            $type = str_starts_with($file->getMimeType(), 'image')
+                ? 'image'
+                : 'video';
+
+            $post->media()->create([
+                'file_path' => $path,
+                'file_type' => $type,
+                'mime_type' => $file->getMimeType(),
+                'size' => $file->getSize(),
+            ]);
+        }
+    }
+
     public function update(String $uuid, array $data)
     {
         $post = Post::query()->where('uuid', $uuid)->where('user_id', auth()->id())->firstOrFail();

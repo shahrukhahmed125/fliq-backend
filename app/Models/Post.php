@@ -15,7 +15,6 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
-        'media',
         'parent_id',
         'repost_of',
         'is_repost',
@@ -28,5 +27,10 @@ class Post extends Model
                 $post->uuid = (string) Str::uuid();
             }
         });
+    }
+
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable');
     }
 }
