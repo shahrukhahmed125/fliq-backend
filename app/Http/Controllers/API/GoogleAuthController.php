@@ -50,7 +50,7 @@ class GoogleAuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => $user
+            'data' => $user
         ]);
     }
 }
