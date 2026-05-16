@@ -43,6 +43,13 @@ class PostController extends Controller
         200);
     }
 
+    public function toggleLike(String $uuid)
+    {
+        return response()->json(
+            $this->postService->like($uuid),
+        200);
+    }
+
     public function destroy(String $uuid)
     {
         $this->postService->delete($uuid);

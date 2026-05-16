@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts/store', [PostController::class, 'store']);
     Route::get('/posts/show/{uuid}', [PostController::class, 'show']);
     Route::put('/posts/update/{uuid}', [PostController::class, 'update']);
+    Route::post('/posts/{uuid}/like', [PostController::class, 'toggleLike']);
     Route::delete('/posts/delete/{uuid}', [PostController::class, 'destroy']);
     Route::get('/logout', [AuthController::class, 'logout']);
 

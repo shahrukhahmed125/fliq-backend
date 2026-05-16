@@ -69,6 +69,17 @@ class PostService
         ];
     }
 
+    public function like(string $uuid): array
+    {
+        $like = $this->postRepository->toggleLike($uuid);
+
+        return [
+            'status' => true,
+            'message' => 'Post like toggled successfully',
+            'data' => $like,
+        ];
+    }
+
     public function delete(String $uuid): void
     {
         $this->postRepository->delete($uuid);
