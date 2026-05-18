@@ -12,6 +12,11 @@ class Media extends Model
         'file_type',
         'mime_type',
         'size',
+        'status',
+        'thumbnail',
+        'processing_error',
+        'duration'
+
     ];
 
     protected static function booted()

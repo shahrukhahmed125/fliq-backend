@@ -4,6 +4,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Post;
 use App\Models\PostLike;
 use App\Repositories\Interfaces\PostRepositoryInterface;
+use App\Services\Media\VideoUploadService;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -57,36 +58,17 @@ class PostRepository implements PostRepositoryInterface
                 Storage::disk('public')->put($path, $encoded);
                 $type = 'image';
 
-            } else {
+                $post->media()->create([
+                    'file_path' => asset('storage/' . $path),
+                    'file_type' => $type,
+                    'mime_type' => $file->getMimeType(),
+                    'size' => Storage::disk('public')->size($path),
+                ]);
+            }else {
 
-                $filename = Str::uuid() . '.mp4';
-                $relativePath = 'posts/' . $filename;
-
-                $outputPath = storage_path('app/public/' . $relativePath);
-
-                $input = '"' . $file->getPathname() . '"';
-                $output = '"' . $outputPath . '"';
-
-                exec(
-                    "ffmpeg -i $input -vcodec libx264 -crf 28 $output 2>&1",
-                    $outputLog,
-                    $resultCode
-                );
-
-                if ($resultCode !== 0) {
-                    dd($outputLog);
-                }
-
-                $path = $relativePath;
-                $type = 'video';
+                app(VideoUploadService::class)
+                    ->upload($post, $file);
             }
-
-            $post->media()->create([
-                'file_path' => asset('storage/' . $path),
-                'file_type' => $type,
-                'mime_type' => $file->getMimeType(),
-                'size' => Storage::disk('public')->size($path),
-            ]);
         }
     }
 
