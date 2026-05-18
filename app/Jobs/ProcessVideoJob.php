@@ -37,7 +37,8 @@ class ProcessVideoJob implements ShouldQueue
             mkdir(dirname($outputPath), 0777, true);
         }
 
-        $command = "ffmpeg -i \"$inputPath\" -vcodec libx264 -crf 28 \"$outputPath\" 2>&1";
+        $ffmpeg = 'C:\\ffmpeg\\bin\\ffmpeg.exe';
+        $command = "$ffmpeg -i \"$inputPath\" -vcodec libx264 -crf 28 \"$outputPath\" 2>&1";
 
         exec($command, $output, $resultCode);
 
