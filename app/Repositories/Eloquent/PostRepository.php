@@ -46,21 +46,23 @@ class PostRepository implements PostRepositoryInterface
 
         foreach ((array) $files as $file) {
 
-            if (str_starts_with($file->getMimeType(), 'image')) {
+            if (str_contains($file->getMimeType(), 'image')) {
 
                 $image = $manager->read($file);
+
                 $image->scale(width: 1280);
 
-                $encoded = $image->toJpeg(75);
+                $encoded = $image->toJpeg(75)->toString();
+
                 $filename = Str::uuid() . '.jpg';
+
                 $path = 'posts/' . $filename;
 
                 Storage::disk('public')->put($path, $encoded);
-                $type = 'image';
 
                 $post->media()->create([
                     'file_path' => $path,
-                    'file_type' => $type,
+                    'file_type' => 'image',
                     'mime_type' => $file->getMimeType(),
                     'size' => Storage::disk('public')->size($path),
                 ]);
