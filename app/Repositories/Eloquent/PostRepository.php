@@ -59,7 +59,7 @@ class PostRepository implements PostRepositoryInterface
                 $type = 'image';
 
                 $post->media()->create([
-                    'file_path' => asset('storage/' . $path),
+                    'file_path' => $path,
                     'file_type' => $type,
                     'mime_type' => $file->getMimeType(),
                     'size' => Storage::disk('public')->size($path),
