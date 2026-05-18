@@ -65,6 +65,7 @@ class PostRepository implements PostRepositoryInterface
                     'file_type' => 'image',
                     'mime_type' => $file->getMimeType(),
                     'size' => Storage::disk('public')->size($path),
+                    'status' => 'completed',
                 ]);
             }else {
 
