@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CommentController;
 use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\API\PostController;
 use Illuminate\Http\Request;
@@ -18,12 +19,19 @@ Route::post('/auth/google', [GoogleAuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/logout', [AuthController::class, 'logout']);
+
+    // POST ROUTES //
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts/store', [PostController::class, 'store']);
     Route::get('/posts/show/{uuid}', [PostController::class, 'show']);
     Route::put('/posts/update/{uuid}', [PostController::class, 'update']);
     Route::post('/posts/{uuid}/like', [PostController::class, 'toggleLike']);
     Route::delete('/posts/delete/{uuid}', [PostController::class, 'destroy']);
-    Route::get('/logout', [AuthController::class, 'logout']);
+
+    // COMMENT ROUTES //
+    Route::get('/comments/{postUuid}', [CommentController::class, 'index']);
+    Route::post('/comments/store', [CommentController::class, 'store']);
+    Route::delete('/comments/delete/{uuid}', [CommentController::class, 'destroy']);
 
 });
