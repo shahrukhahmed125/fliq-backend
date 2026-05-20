@@ -23,9 +23,9 @@ class CommentRepository implements CommentRepositoryInterface
     {
         $comments = Comment::query()
         ->with(['user', 'replies.user'])
-        ->whereNull('parent_id')
+        // ->whereNull('parent_id')
         ->latest()
-        ->paginate($perPage);
+        ->get();
 
         return $comments;
     }
