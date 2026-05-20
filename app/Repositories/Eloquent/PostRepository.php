@@ -15,6 +15,7 @@ class PostRepository implements PostRepositoryInterface
     public function all()
     {
         $posts = Post::with(['user', 'media'])
+        ->withCount('likes')
         ->latest()
         ->get();
 
