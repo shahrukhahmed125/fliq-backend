@@ -14,10 +14,25 @@ class PostRepository implements PostRepositoryInterface
 {
     public function all()
     {
+        $userId = auth()->id();
+
+        // get post ids user liked in ONE query
+        $likedPostIds = [];
+
+        if ($userId) {
+            $likedPostIds = PostLike::query()->where('user_id', $userId)
+                ->pluck('post_id')
+                ->toArray();
+        }
+
         $posts = Post::with(['user', 'media'])
-        ->withCount('likes')
-        ->latest()
-        ->get();
+            ->withCount('likes')
+            ->latest()
+            ->get()
+            ->map(function ($post) use ($likedPostIds) {
+                $post->is_liked = in_array($post->id, $likedPostIds);
+                return $post;
+            });
 
         return $posts;
     }
