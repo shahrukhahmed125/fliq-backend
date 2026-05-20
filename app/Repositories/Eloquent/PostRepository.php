@@ -27,6 +27,7 @@ class PostRepository implements PostRepositoryInterface
 
         $posts = Post::with(['user', 'media'])
             ->withCount('likes')
+            ->withCount('comments')
             ->latest()
             ->get()
             ->map(function ($post) use ($likedPostIds) {

@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // COMMENT ROUTES //
     Route::get('/comments/{postUuid}', [CommentController::class, 'index']);
     Route::post('/comments/store', [CommentController::class, 'store']);
+    Route::post('/comments/{uuid}/like', [CommentController::class, 'toggleLike']);
     Route::delete('/comments/delete/{uuid}', [CommentController::class, 'destroy']);
 
 });

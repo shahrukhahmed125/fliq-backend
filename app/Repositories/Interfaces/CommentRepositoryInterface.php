@@ -5,5 +5,6 @@ interface CommentRepositoryInterface
 {
     public function create(array $data);
     public function getPostComments(String $uuid);
+    public function toggleLike(string $uuid): array;
     public function delete(String $uuid);
 }

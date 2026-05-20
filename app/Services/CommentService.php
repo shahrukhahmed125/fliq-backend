@@ -34,6 +34,17 @@ class CommentService
         ];
     }
 
+    public function like(string $uuid): array
+    {
+        $like = $this->commentRepository->toggleLike($uuid);
+
+        return [
+            'status' => true,
+            'message' => 'Comment like toggled successfully',
+            'data' => $like,
+        ];
+    }
+
     public function deleteComment(String $uuid): void
     {
         $this->commentRepository->delete($uuid);

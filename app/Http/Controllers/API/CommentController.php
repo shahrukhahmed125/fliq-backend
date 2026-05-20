@@ -29,6 +29,13 @@ class CommentController extends Controller
         201);
     }
 
+    public function toggleLike(String $uuid)
+    {
+        return response()->json(
+            $this->commentService->like($uuid),
+        200);
+    }
+
     public function destroy(String $uuid)
     {
         $this->commentService->deleteComment($uuid);
