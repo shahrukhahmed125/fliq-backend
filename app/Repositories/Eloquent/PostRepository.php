@@ -28,6 +28,7 @@ class PostRepository implements PostRepositoryInterface
         $posts = Post::with(['user', 'media'])
             ->withCount('likes')
             ->withCount('replies')
+            ->withCount('reposts')
             ->latest()
             ->get()
             ->map(function ($post) use ($likedPostIds) {
@@ -46,16 +47,23 @@ class PostRepository implements PostRepositoryInterface
 
     public function store(array $data)
     {
-        $parent = Post::query()->where('uuid', $data['parent_id'])->first();
+        $parent = !empty($data['parent_id'])
+            ? Post::query()->where('uuid', $data['parent_id'])->first()
+            : null;
+
+        $repostOf = !empty($data['repost_of'])
+            ? Post::query()->where('uuid', $data['repost_of'])->first()
+            : null;
+
         $post = Post::create([
             'user_id' => auth()->id(),
             'content' => $data['content'] ?? null,
-            'parent_id' => $parent ? $parent->id : null,
+            'parent_id' => $parent?->id,
             'quote_id' => $data['quote_id'] ?? null,
-            'repost_of' => $data['repost_of'] ?? null,
-        ])->with(['user', 'media'])->first();
+            'repost_of' => $repostOf?->id,
+        ]);
 
-        return $post;
+        return $post->load(['user', 'media']);
     }
 
     public function attachMedia(Post $post, $files)
@@ -103,7 +111,7 @@ class PostRepository implements PostRepositoryInterface
             'repost_of' => $data['repost_of'] ?? $post->repost_of,
             'is_repost' => $data['is_repost'] ?? $post->is_repost,
         ]);
-        return $post;
+        return $post->load(['user', 'media']);
     }
 
     public function toggleLike(string $uuid): array
@@ -145,6 +153,7 @@ class PostRepository implements PostRepositoryInterface
         $replies = Post::with(['user', 'media'])
             ->withCount('likes')
             ->withCount('replies')
+            ->withCount('reposts')
             ->where('parent_id', $post->id)
             ->latest()
             ->get();

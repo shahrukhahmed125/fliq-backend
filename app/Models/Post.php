@@ -18,7 +18,6 @@ class Post extends Model
         'parent_id',
         'quote_id',
         'repost_of',
-        'is_repost',
     ];
 
     protected static function booted()
@@ -48,5 +47,10 @@ class Post extends Model
     public function replies()
     {
         return $this->hasMany(Post::class, 'parent_id');
+    }
+
+    public function reposts()
+    {
+        return $this->hasMany(Post::class, 'repost_of');
     }
 }
