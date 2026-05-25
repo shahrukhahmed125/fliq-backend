@@ -44,4 +44,9 @@ class Post extends Model
     {
         return $this->hasMany(PostLike::class);
     }
+
+    public function replies()
+    {
+        return $this->hasMany(Post::class, 'parent_id');
+    }
 }

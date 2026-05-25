@@ -27,6 +27,7 @@ class PostRepository implements PostRepositoryInterface
 
         $posts = Post::with(['user', 'media'])
             ->withCount('likes')
+            ->withCount('replies')
             ->latest()
             ->get()
             ->map(function ($post) use ($likedPostIds) {
@@ -143,6 +144,7 @@ class PostRepository implements PostRepositoryInterface
 
         $replies = Post::with(['user', 'media'])
             ->withCount('likes')
+            ->withCount('replies')
             ->where('parent_id', $post->id)
             ->latest()
             ->get();
