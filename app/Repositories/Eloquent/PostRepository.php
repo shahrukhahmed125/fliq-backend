@@ -52,7 +52,7 @@ class PostRepository implements PostRepositoryInterface
             'parent_id' => $parent ? $parent->id : null,
             'quote_id' => $data['quote_id'] ?? null,
             'repost_of' => $data['repost_of'] ?? null,
-        ]);
+        ])->with(['user', 'media'])->first();
 
         return $post;
     }
