@@ -53,4 +53,9 @@ class Post extends Model
     {
         return $this->hasMany(Post::class, 'repost_of');
     }
+
+    public function repostedPost()
+    {
+        return $this->belongsTo(Post::class, 'repost_of');
+    }
 }

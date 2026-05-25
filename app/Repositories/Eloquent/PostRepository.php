@@ -25,7 +25,7 @@ class PostRepository implements PostRepositoryInterface
                 ->toArray();
         }
 
-        $posts = Post::with(['user', 'media'])
+        $posts = Post::with(['user', 'media', 'repostedPost.user', 'repostedPost.media'])
             ->withCount('likes')
             ->withCount('replies')
             ->withCount('reposts')
@@ -41,7 +41,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function find(String $uuid)
     {
-        $post = Post::query()->where('uuid', $uuid)->with(['user', 'media'])->first();
+        $post = Post::query()->where('uuid', $uuid)->with(['user', 'media', 'repostedPost.user', 'repostedPost.media'])->first();
         return $post;
     }
 
@@ -63,7 +63,12 @@ class PostRepository implements PostRepositoryInterface
             'repost_of' => $repostOf?->id,
         ]);
 
-        return $post->load(['user', 'media']);
+        return $post->load([
+            'user', 
+            'media',
+            'repostedPost.user',
+            'repostedPost.media',
+        ]);
     }
 
     public function attachMedia(Post $post, $files)
