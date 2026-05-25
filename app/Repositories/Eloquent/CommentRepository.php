@@ -4,14 +4,16 @@ namespace App\Repositories\Eloquent;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Models\Comment;
 use App\Models\CommentLike;
+use App\Models\Post;
 
 class CommentRepository implements CommentRepositoryInterface
 {
     public function create(array $data)
     {
+        $post = Post::query()->where('uuid', $data['post_uuid'])->firstOrFail();
         $comment = Comment::create([
             'user_id' => auth()->id(),
-            'post_id' => $data['post_id'],
+            'post_id' => $post->id,
             'parent_id' => $data['parent_id'] ?? null,
             'content' => $data['content'],
         ]);
