@@ -27,7 +27,6 @@ class PostRepository implements PostRepositoryInterface
 
         $posts = Post::with(['user', 'media'])
             ->withCount('likes')
-            ->withCount('comments')
             ->latest()
             ->get()
             ->map(function ($post) use ($likedPostIds) {
@@ -40,18 +39,19 @@ class PostRepository implements PostRepositoryInterface
 
     public function find(String $uuid)
     {
-        $post = Post::query()->where('uuid', $uuid)->first();
+        $post = Post::query()->where('uuid', $uuid)->with(['user', 'media'])->first();
         return $post;
     }
 
     public function store(array $data)
     {
+        $parent = Post::query()->where('uuid', $data['parent_id'])->first();
         $post = Post::create([
             'user_id' => auth()->id(),
             'content' => $data['content'] ?? null,
-            'parent_id' => $data['parent_id'] ?? null,
+            'parent_id' => $parent ? $parent->id : null,
+            'quote_id' => $data['quote_id'] ?? null,
             'repost_of' => $data['repost_of'] ?? null,
-            'is_repost' => $data['is_repost'] ?? false,
         ]);
 
         return $post;
@@ -135,5 +135,18 @@ class PostRepository implements PostRepositoryInterface
         $post = Post::query()->where('uuid', $uuid)->where('user_id', auth()->id())->firstOrFail();
         
         $post->delete();
+    }
+
+    public function replies(String $uuid)
+    {
+        $post = Post::query()->where('uuid', $uuid)->firstOrFail();
+
+        $replies = Post::with(['user', 'media'])
+            ->withCount('likes')
+            ->where('parent_id', $post->id)
+            ->latest()
+            ->get();
+
+        return $replies;
     }
 }

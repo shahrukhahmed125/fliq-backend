@@ -16,6 +16,7 @@ class Post extends Model
         'user_id',
         'content',
         'parent_id',
+        'quote_id',
         'repost_of',
         'is_repost',
     ];
@@ -42,10 +43,5 @@ class Post extends Model
     public function likes()
     {
         return $this->hasMany(PostLike::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
     }
 }

@@ -9,4 +9,5 @@ interface PostRepositoryInterface
     public function update(String $uuid, array $data);
     public function toggleLike(string $uuid): array;
     public function delete(String $uuid);
+    public function replies(String $uuid);
 }

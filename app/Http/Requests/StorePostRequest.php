@@ -23,12 +23,12 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'required|string|max:280',
+            'content' => 'string|max:280',
             'media' => 'nullable|array',
             'media.*' => 'file|mimes:jpg,jpeg,png,mp4,mov,avi|max:204800',
-            'parent_id' => 'nullable|exists:posts,id',
-            'repost_of' => 'nullable|exists:posts,id',
-            'is_repost' => 'boolean|nullable',
+            'parent_id' => 'nullable|exists:posts,uuid',
+            'quote_id' => 'nullable|exists:posts,uuid',
+            'repost_of' => 'nullable|exists:posts,uuid'
         ];
     }
 }

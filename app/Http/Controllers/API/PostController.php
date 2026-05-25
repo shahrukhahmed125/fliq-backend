@@ -60,5 +60,12 @@ class PostController extends Controller
         ]);
     }
 
+    public function replies(String $uuid)
+    {
+        return response()->json(
+            $this->postService->replies($uuid),
+        200);
+    }
+
 
 }

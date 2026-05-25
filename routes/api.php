@@ -28,11 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/posts/update/{uuid}', [PostController::class, 'update']);
     Route::post('/posts/{uuid}/like', [PostController::class, 'toggleLike']);
     Route::delete('/posts/delete/{uuid}', [PostController::class, 'destroy']);
-
-    // COMMENT ROUTES //
-    Route::get('/comments/{postUuid}', [CommentController::class, 'index']);
-    Route::post('/comments/store', [CommentController::class, 'store']);
-    Route::post('/comments/{uuid}/like', [CommentController::class, 'toggleLike']);
-    Route::delete('/comments/delete/{uuid}', [CommentController::class, 'destroy']);
+    Route::get('/posts/{uuid}/replies', [PostController::class, 'replies']);
 
 });

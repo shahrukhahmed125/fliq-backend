@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('posts')->nullOnDelete();
             $table->foreignId('repost_of')->nullable()->constrained('posts')->nullOnDelete();
-            $table->boolean('is_repost')->default(false);
+            $table->foreignId('quote_id')->nullable()->constrained('posts')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
             $table->index(['user_id', 'created_at']);

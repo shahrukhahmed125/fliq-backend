@@ -44,6 +44,14 @@ class PostService
 
     public function store(array $data, $files = null): array
     {
+        if (
+            !empty($data['parent_id']) &&
+            !empty($data['repost_of']) &&
+            !empty($data['quote_id'])
+        ) {
+            throw new \Exception("Invalid post type combination");
+        }
+
         $post = $this->postRepository->store($data);
         
         // YOU MUST MANUALLY CALL THIS
@@ -83,5 +91,16 @@ class PostService
     public function delete(String $uuid): void
     {
         $this->postRepository->delete($uuid);
+    }
+
+    public function replies(String $uuid): array
+    {
+        $replies = $this->postRepository->replies($uuid);
+
+        return [
+            'status' => true,
+            'message' => 'Replies retrieved successfully',
+            'data' => $replies,
+        ];
     }
 }
