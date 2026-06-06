@@ -1,0 +1,13 @@
+<?php
+namespace App\Repositories\Interfaces;
+
+interface PostRepositoryInterface
+{
+    public function all();
+    public function find(String $uuid);
+    public function store(array $data);
+    public function update(String $uuid, array $data);
+    public function toggleLike(string $uuid): array;
+    public function delete(String $uuid);
+    public function replies(String $uuid);
+}

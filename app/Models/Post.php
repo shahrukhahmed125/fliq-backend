@@ -15,10 +15,9 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'content',
-        'media',
         'parent_id',
+        'quote_id',
         'repost_of',
-        'is_repost',
     ];
 
     protected static function booted()
@@ -28,5 +27,35 @@ class Post extends Model
                 $post->uuid = (string) Str::uuid();
             }
         });
+    }
+
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(PostLike::class);
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Post::class, 'parent_id');
+    }
+
+    public function reposts()
+    {
+        return $this->hasMany(Post::class, 'repost_of');
+    }
+
+    public function repostedPost()
+    {
+        return $this->belongsTo(Post::class, 'repost_of');
     }
 }

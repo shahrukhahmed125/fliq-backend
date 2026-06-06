@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_likes', function (Blueprint $table) {
+        Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignId('comment_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); 
+            $table->morphs('mediable'); // mediable_id + mediable_type
+            $table->string('file_path');
+            $table->string('file_type')->nullable(); // image/video
+            $table->string('mime_type')->nullable();
+            $table->unsignedBigInteger('size')->nullable();
             $table->timestamps();
-            $table->unique(['comment_id', 'user_id']); // prevent duplicate likes
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comment_likes');
+        Schema::dropIfExists('media');
     }
 };

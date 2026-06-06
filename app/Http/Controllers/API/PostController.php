@@ -3,76 +3,69 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StorePostRequest;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     public function index()
     {
-        $data = Post::all();
+        return response()->json(
+            $this->postService->all(),
+        200);
+    }
+
+    public function store(StorePostRequest $request)
+    {
+        return response()->json(
+            $this->postService->store($request->validated(), $request->file('media')), 
+        201);
+    }
+
+    public function show(String $uuid)
+    {
+        return response()->json(
+            $this->postService->find($uuid),
+        200);
+    }
+
+    public function update(String $uuid, StorePostRequest $request)
+    {
+        return response()->json(
+            $this->postService->update($uuid, $request->validated()),
+        200);
+    }
+
+    public function toggleLike(String $uuid)
+    {
+        return response()->json(
+            $this->postService->like($uuid),
+        200);
+    }
+
+    public function destroy(String $uuid)
+    {
+        $this->postService->delete($uuid);
 
         return response()->json([
             'status' => true,
-            'message' => 'Posts retrieved successfully',
-            'data' => $data
-        ], 200);
+            'message' => 'Post deleted successfully',
+        ]);
     }
 
-    public function store(Request $request)
+    public function replies(String $uuid)
     {
-        try {
-
-            $validator = Validator::make($request->all(), [
-                'content' => 'required|string',
-                'media' => 'nullable|array',
-                'media.*' => 'nullable|string',
-            ]);    
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            $post = Post::create([
-                'content' => $request->content,
-                'media' => $request->media,
-                'user_id' => auth()->id(),
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Post created successfully',
-                'data' => $post
-            ], 201);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to create post'
-            ], 500);
-        }
-
+        return response()->json(
+            $this->postService->replies($uuid),
+        200);
     }
 
-    public function show(String $id)
-    {
-        $post = Post::findOrFail($id);
 
-        if (!$post) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Post not found!'
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Post retrieved successfully',
-            'data' => $post
-        ], 200);
-    }
 }
