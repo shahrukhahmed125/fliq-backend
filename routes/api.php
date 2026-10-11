@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CommentController;
-use App\Http\Controllers\Api\GoogleAuthController;
+use App\Http\Controllers\API\GoogleAuthController;
 use App\Http\Controllers\API\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
