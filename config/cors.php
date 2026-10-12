@@ -20,12 +20,17 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        env('CORS_ALLOWED_ORIGIN'),
+        env('CORS_ALLOWED_ORIGIN', 'http://localhost:3000'),
     ],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [
+        'Content-Type',
+        'Authorization',
+        'Accept',
+        'X-Requested-With',
+    ],
 
     'exposed_headers' => [],
 
