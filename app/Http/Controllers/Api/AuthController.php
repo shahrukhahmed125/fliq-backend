@@ -26,14 +26,22 @@ class AuthController extends Controller
         );
     }
 
+
     public function login(LoginRequest $request)
     {
-        return response()->json(
-            $this->authService->login(
-                $request->validated()
-            ),
-            200
-        );
+        try {
+            return response()->json(
+                $this->authService->login(
+                    $request->validated()
+                ),
+                200
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 401);
+        }
     }
 
     public function logout()
